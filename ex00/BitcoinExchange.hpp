@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:12:00 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/15 01:04:59 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/15 01:47:25 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,16 @@ class BitcoinExchange {
 	private:
 		std::map<std::string, double> database;
 	public:
-		BitcoinExchange(const std::string& filename);
-		double get_price(const std::string& date_str) const;
-		void exchange(const std::string& input_filename) const;
+	// constructors
+		BitcoinExchange();
+		BitcoinExchange(std::string filename);
+		BitcoinExchange(BitcoinExchange const & src);
+		~BitcoinExchange();
+	// operators
+		BitcoinExchange & operator=(BitcoinExchange const & rhs);
+	// methods
+		double get_price(std::string date_str);
+		void exchange(std::string input_filename);
 };
 
 

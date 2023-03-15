@@ -6,13 +6,22 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:11:56 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/15 01:12:04 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/15 02:07:34 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange(const std::string& filename) 
+
+BitcoinExchange::BitcoinExchange() {return;}
+
+BitcoinExchange::BitcoinExchange(BitcoinExchange const & src) { *this = src; return;}
+
+BitcoinExchange::~BitcoinExchange() {return;}
+
+BitcoinExchange & BitcoinExchange::operator=(BitcoinExchange const & rhs){this->database = rhs.database; return *this;}
+
+BitcoinExchange::BitcoinExchange(std::string filename) 
 {
     std::ifstream infile(filename);
     std::string line;
@@ -37,19 +46,17 @@ BitcoinExchange::BitcoinExchange(const std::string& filename)
     infile.close();
 }
 
-double  BitcoinExchange::get_price(const std::string& date_str) const 
+double  BitcoinExchange::get_price(std::string date_str) 
 {
     std::map<std::string, double>::const_iterator it = database.find(date_str);
-    if (it != database.end()) {
+    if (it != database.end())
         return it->second;
-    } 
     else 
     {
         std::map<std::string, double>::const_iterator lower_it = database.lower_bound(date_str);
-        if (lower_it == database.begin()) 
-        {
+        if (lower_it == database.begin())
             return 0.0;
-        } else 
+        else 
         {
             --lower_it;
             return lower_it->second;
@@ -57,7 +64,7 @@ double  BitcoinExchange::get_price(const std::string& date_str) const
     }
 }
 
-void BitcoinExchange::exchange(const std::string& input_filename) const 
+void BitcoinExchange::exchange(std::string input_filename) 
 {
     std::ifstream infile(input_filename);
     if (!infile.is_open()) 
@@ -72,12 +79,12 @@ void BitcoinExchange::exchange(const std::string& input_filename) const
         std::string date_str;
         double value;
         char sep;
-        if (!(iss >> date_str >> sep >> value) || sep != '|') 
+        if (!(iss >> date_str >> sep >> value)) 
         {
             std::cerr << "Error: bad input ==> " << line << std::endl;
             continue;
         }
-        if (value <= 0.0)
+        if (value < 0.0)
         {
             std::cerr << "Error: not a positive number."  << std::endl;
             continue;
