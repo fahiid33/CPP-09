@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:12:00 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/15 01:47:25 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/15 19:53:01 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <iostream>
 #include <map>
 #include <iomanip>
+
 
 class BitcoinExchange {
 	private:

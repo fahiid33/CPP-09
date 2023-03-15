@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:11:56 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/15 05:57:38 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/15 19:53:46 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ float  check_value(std::string line)
             if (value[j] != ' ')
                 return -1;
     }
-    values[0].replace(values[0].find(","), 1, ".");
+    if (values[0].find(",") != std::string::npos)
+        values[0].replace(values[0].find(","), 1, ".");
     return (stof(values[0]));
 }
 
@@ -108,7 +109,7 @@ int error_handlig(std::string line, std::string &date_str, char &sep, float &val
     std::istringstream iss(line);
     if (!(iss >> date_str >> sep >> value) || sep != '|') 
     {
-        std::cerr << "Error: bad input ==> " << line << std::endl;
+        std::cerr << "Error: bad input => " << line << std::endl;
         return(1);
     }
     if ((value = check_value(line)) == -1)
