@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 02:53:21 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/16 04:09:31 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/16 20:21:34 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,51 @@ void print(const T& container)
 {
     for (typename T::const_iterator it = container.begin(); it != container.end(); ++it)
     {
-        cout << *it << " ";
+        std::cout << *it << " ";
     }
-    std::cout << endl;
+    std::cout << std::endl;
 }
 template <typename T>
-
+void    merge_insert_sort(T & container)
+{
+    if (container.size() <= 1)
+        return;
+    T left;
+    T right;
+    typename T::iterator it = container.begin();
+    typename T::iterator ite = container.end();
+    typename T::iterator mid = it + (ite - it) / 2;
+    left.insert(left.begin(), it, mid);
+    right.insert(right.begin(), mid, ite);
+    merge_insert_sort(left);
+    merge_insert_sort(right);
+    container.clear();
+    typename T::iterator it_left = left.begin();
+    typename T::iterator it_right = right.begin();
+    while (it_left != left.end() && it_right != right.end())
+    {
+        if (*it_left < *it_right)
+        {
+            container.push_back(*it_left);
+            it_left++;
+        }
+        else
+        {
+            container.push_back(*it_right);
+            it_right++;
+        }
+    }
+    while (it_left != left.end())
+    {
+        container.push_back(*it_left);
+        it_left++;
+    }
+    while (it_right != right.end())
+    {
+        container.push_back(*it_right);
+        it_right++;
+    }
+}
 
 
 int main(int ac, char **av)
@@ -103,22 +142,31 @@ int main(int ac, char **av)
         std::cout << "Usage " << av[0] << "<number1> <number2> ..." << std::endl;
         return (1);
     }
-    _CheckArgs(av, ac);
+    // _CheckArgs(av, ac);
     std::vector<int> nums;
     for (int i = 1; i < ac; ++i)
     {
         nums.push_back(atoi(av[i]));
     }
-    std::vector v(nums);
+    std::vector <int>v(nums);
     std::cout << "before : ";
     print(v);
-    clock_t t1 = clock();
+    clock_t start = clock();
     merge_insert_sort(v);
-    clock_t t2 = clock();
+    clock_t end = clock();
+    long elapsed_usec = (end - start) * 1000000 / CLOCKS_PER_SEC;
     std::cout << "after : ";
     print(v);
-    std::cout << "Time to process a range of " << v.size() << " elements with std::vector: " << ((t2 - t1) / static_cast<double>(CLOCKS_PER_SEC) * 1000000) << " us\n";
-    
-    
+    std::cout << "Time to process a range of " << v.size() << " elements with std::vector: " << elapsed_usec << " us\n";
+    std::deque <int>d(nums.begin(), nums.end());
+    std::cout << "before : ";
+    print(d);
+    start = clock();
+    merge_insert_sort(d);
+    end = clock();
+    elapsed_usec = (end - start) * 1000000 / CLOCKS_PER_SEC;
+    std::cout << "after : ";
+    print(d);
+    std::cout << "Time to process a range of " << d.size() << " elements with std::deque: " << elapsed_usec << " us\n";
     
 }
