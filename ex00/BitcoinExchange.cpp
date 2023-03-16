@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 22:11:56 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/15 19:53:46 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/16 01:33:16 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ BitcoinExchange::BitcoinExchange(std::string filename)
         price = std::stof(line.substr(11, line.size()));
         database[date_str] = price;
     }
-    // print database
     // for (std::map<std::string, double>::iterator it = database.begin(); it != database.end(); ++it)
     // 	std::cout << it->first << " => " << it->second << std::endl;
     infile.close();
