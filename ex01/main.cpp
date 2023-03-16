@@ -6,7 +6,7 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 20:42:57 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/16 01:31:40 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/16 02:48:04 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,48 @@
 #include <string>
 #include <cstdlib>
 
-void    _CheckArgs(std::string expression)
+int     is_operator(char ex)
 {
-    for(size_t i = 0; i < expression.length(); i++)
+    if (ex == '+' || ex == '-'|| ex == '*' || ex == '/')
+        return (1);
+    return (0);
+    
+}
+
+int is_valid_rpn(std::string exp)
+{
+    int count = 0;
+    for(size_t i = 0; i < exp.length(); i++)
     {
-        if (!isdigit(expression[i]) && expression[i] != '+' 
-            && expression[i] != '-' && expression[i] != '*' 
-            && expression[i] != '/' && !isblank(expression[i]))
+        if (isblank(exp[i]))
+            continue ;
+        if (isdigit(exp[i]))
         {
-            std::cerr << "Error : Bad args" << std::endl;
-            exit(1);
+            count++;
+            continue ;
         }
-        else if (expression[i] == ')' || expression[i] == '(')
+        if (is_operator(exp[i]))
+        {
+            if (count < 2)
+                return (0);
+            count--;
+        }
+        else
+            return (0);
+    }
+    return (count == 1);
+}
+
+void    _CheckArgs(std::string expr)
+{
+    if (!is_valid_rpn(expr))
+    {
+        std::cerr << "Error : invalid rpn" << std::endl;
+        exit(1);
+    }
+    for(size_t i = 0; i < expr.length(); i++)
+    {
+        if (!isdigit(expr[i]) && !is_operator(expr[i]) && !isblank(expr[i]))
         {
             std::cerr << "Error : Bad args" << std::endl;
             exit(1);
