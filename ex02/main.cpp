@@ -6,92 +6,12 @@
 /*   By: fstitou <fstitou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 02:53:21 by fstitou           #+#    #+#             */
-/*   Updated: 2023/03/16 20:21:34 by fstitou          ###   ########.fr       */
+/*   Updated: 2023/03/18 02:44:08 by fstitou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <vector>
-#include <deque>
+#include "PmergeMe.hpp"
 
-int myAtoi(const char* str) 
-{
-    int sign = 1;
-    int result = 0;
-    while (*str == ' ') {
-        str++;
-    }
-    if (*str == '-') {
-        sign = -1;
-        str++;
-    } else if (*str == '+') {
-        sign = 1;
-        str++;
-    }
-    while (*str >= '0' && *str <= '9') {
-        result = result * 10 + (*str - '0');
-        str++;
-    }
-    return sign * result;
-}
-
-int is_digit(char *av)
-{
-    int i = 0;
-    while (av[i])
-    {
-        if (!isdigit(av[i]))
-            return (0);
-        i++;
-    }
-    return (1);
-}
-bool compareStrings(const char* str1, const char* str2) 
-{
-    std::string s1(str1);
-    std::string s2(str2);
-    return s1 == s2;
-}
-
-bool duplicates(char **av, int ac)
-{
-    for (int i = 1; i < ac; i++) 
-    {
-        for (int j = i + 1; j < ac; j++) 
-        {
-            if (compareStrings(av[i], av[j]))
-                return true;
-        }
-    }
-    return false;
-}
-
-
-void    _CheckArgs(char **av, int ac)
-{
-    for (int i = 1; i < ac; i++)
-    {
-        if (!is_digit(av[i]))
-        {
-            std::cerr << "Error: not a positive integer" << std::endl;
-            exit(1);
-        }
-    }
-    if (duplicates(av, ac))
-    {
-         std::cerr << "Error: there is a duplicated numbers" << std::endl;
-        exit(1);
-    }
-}
-template <typename T>
-void print(const T& container)
-{
-    for (typename T::const_iterator it = container.begin(); it != container.end(); ++it)
-    {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-}
 template <typename T>
 void    merge_insert_sort(T & container)
 {
@@ -122,31 +42,32 @@ void    merge_insert_sort(T & container)
             it_right++;
         }
     }
-    while (it_left != left.end())
-    {
-        container.push_back(*it_left);
-        it_left++;
-    }
-    while (it_right != right.end())
-    {
-        container.push_back(*it_right);
-        it_right++;
-    }
+    container.insert(container.end(), it_left, left.end());
+    container.insert(container.end(), it_right, right.end());
 }
 
+template <typename T>
+void print(const T& container)
+{
+    for (typename T::const_iterator it = container.begin(); it != container.end(); ++it)
+    {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
 
 int main(int ac, char **av)
 {
-    if (ac <= 2)
+    if (ac <= 1)
     {
         std::cout << "Usage " << av[0] << "<number1> <number2> ..." << std::endl;
         return (1);
     }
-    // _CheckArgs(av, ac);
+    _CheckArgs(av, ac);
     std::vector<int> nums;
     for (int i = 1; i < ac; ++i)
     {
-        nums.push_back(atoi(av[i]));
+        nums.push_back(myAtoi(av[i]));
     }
     std::vector <int>v(nums);
     std::cout << "before : ";
@@ -154,19 +75,19 @@ int main(int ac, char **av)
     clock_t start = clock();
     merge_insert_sort(v);
     clock_t end = clock();
-    long elapsed_usec = (end - start) * 1000000 / CLOCKS_PER_SEC;
+    double v_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
     std::cout << "after : ";
     print(v);
-    std::cout << "Time to process a range of " << v.size() << " elements with std::vector: " << elapsed_usec << " us\n";
+    std::cout << "Time to process a range of " << v.size() << " elements with std::vector: " << v_time << " us\n";
     std::deque <int>d(nums.begin(), nums.end());
     std::cout << "before : ";
     print(d);
     start = clock();
     merge_insert_sort(d);
     end = clock();
-    elapsed_usec = (end - start) * 1000000 / CLOCKS_PER_SEC;
+    double d_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
     std::cout << "after : ";
     print(d);
-    std::cout << "Time to process a range of " << d.size() << " elements with std::deque: " << elapsed_usec << " us\n";
+    std::cout << "Time to process a range of " << d.size() << " elements with std::deque: " << d_time << " us\n";
     
 }
